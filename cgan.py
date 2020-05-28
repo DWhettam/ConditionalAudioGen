@@ -33,7 +33,7 @@ print(opt)
 
 img_shape = (opt.channels, opt.img_size, opt.img_size)
 
-cuda = True if torch.cuda.is_available() else False
+device = torch.device(torch.cuda.current_device() if torch.cuda.is_available() else "cpu")
 
 
 class Generator(nn.Module):
@@ -98,16 +98,16 @@ adversarial_loss = torch.nn.MSELoss()
 generator = Generator()
 discriminator = Discriminator()
 
-if cuda:
-    generator.cuda()
-    discriminator.cuda()
-    adversarial_loss.cuda()
+generator.to(device)
+discriminator.to(device)
+adversarial_loss.to(device)
+
 
 # Configure data loader
-os.makedirs("../../data/mnist", exist_ok=True)
+os.makedirs("../scratch/data/mnist", exist_ok=True)
 dataloader = torch.utils.data.DataLoader(
     datasets.MNIST(
-        "../../data/mnist",
+        "../scratch/data/mnist",
         train=True,
         download=True,
         transform=transforms.Compose(
