@@ -122,8 +122,8 @@ dataloader = torch.utils.data.DataLoader(
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 
-FloatTensor = torch.FloatTensor.to(device)
-LongTensor = torch.LongTensor.to(device)
+FloatTensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+LongTensor = torch.cuda.LongTensor if torch.cuda.is_available() else torch.LongTensor
 
 
 def sample_image(n_row, batches_done):
