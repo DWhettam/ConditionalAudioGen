@@ -1,6 +1,8 @@
 import argparse
 import os
 import numpy as np
+from utils.datasets import *
+from utils.audio_tools import *
 import math
 
 import torchvision.transforms as transforms
@@ -105,18 +107,19 @@ adversarial_loss.to(device)
 
 # Configure data loader
 os.makedirs("../scratch/data/mnist", exist_ok=True)
-dataloader = torch.utils.data.DataLoader(
-    datasets.MNIST(
-        "../scratch/data/mnist",
-        train=True,
-        download=True,
-        transform=transforms.Compose(
-            [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
-        ),
-    ),
-    batch_size=opt.batch_size,
-    shuffle=True,
-)
+dataloader = get_data_loader()
+# dataloader = torch.utils.data.DataLoader(
+#     datasets.MNIST(
+#         "../scratch/data/mnist",
+#         train=True,
+#         download=True,
+#         transform=transforms.Compose(
+#             [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
+#         ),
+#     ),
+#     batch_size=opt.batch_size,
+#     shuffle=True,
+# )
 
 # Optimizers
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
