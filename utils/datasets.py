@@ -56,10 +56,9 @@ class AudioDataset(Dataset):
         self.data['scene_label'] = self.data.scene_label.cat.codes
 
 def get_data_loader(path):
-    dataset = dcase_util.datasets.TAUUrbanAcousticScenes_2019_DevelopmentSet(data_path=path)
-    dataset.initialize()
-    data_path = path + 'TAU-urban-acoustic-scenes-2019-development/'
-    train_csv = data_path + 'evaluation_setup/fold1_train.csv'
+    # dataset = dcase_util.datasets.TAUUrbanAcousticScenes_2019_DevelopmentSet(data_path=path)
+    # dataset.initialize()
+    train_csv = path + 'evaluation_setup/fold1_train.csv'
 
     TRAIN = AudioDataset(path, train_csv)
     TRAIN_LOADER = DataLoader(dataset=TRAIN, batch_size=32, shuffle=True)
