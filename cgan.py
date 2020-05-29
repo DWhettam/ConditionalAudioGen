@@ -104,7 +104,7 @@ generator.to(device)
 discriminator.to(device)
 adversarial_loss.to(device)
 
-path = '~/scratch/BlindCamera/TAU-urban-acoustic-scenes-2019-development/'
+path = '~/../scratch/BlindCamera/TAU-urban-acoustic-scenes-2019-development/'
 # Configure data loader
 os.makedirs("..", exist_ok=True)
 dataloader = get_data_loader(path)
