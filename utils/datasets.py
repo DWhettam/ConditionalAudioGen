@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import torch
 from torch.utils.data.dataset import Dataset
+from torch.utils.data import DataLoader
 import os
 
 def make_log_spectrogram(audio_array):
@@ -41,10 +42,8 @@ class AudioDataset(Dataset):
         spectrogram = np.expand_dims(spectrogram, 0)
         spectrogram = spectrogram.astype(np.float32)
         spectrogram = torch.from_numpy(spectrogram)
-        spectrogram = spectrogram.to(device)
         label = np.asarray(label)
         label = torch.from_numpy(label).long()
-        label = label.to(device)
 
         return spectrogram, label
 
@@ -55,9 +54,10 @@ class AudioDataset(Dataset):
         self.data.scene_label = pd.Categorical(self.data.scene_label)
         self.data['scene_label'] = self.data.scene_label.cat.codes
 
-def get_data_loader(path):
+def get_data_loader():
     # dataset = dcase_util.datasets.TAUUrbanAcousticScenes_2019_DevelopmentSet(data_path=path)
     # dataset.initialize()
+    path = os.getcwd() + '/../scratch/BlindCamera/TAU-urban-acoustic-scenes-2019-development/'
     train_csv = path + 'evaluation_setup/fold1_train.csv'
 
     TRAIN = AudioDataset(path, train_csv)

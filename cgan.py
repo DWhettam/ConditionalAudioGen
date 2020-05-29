@@ -104,10 +104,8 @@ generator.to(device)
 discriminator.to(device)
 adversarial_loss.to(device)
 
-path = '~/../scratch/BlindCamera/TAU-urban-acoustic-scenes-2019-development/'
 # Configure data loader
-os.makedirs("..", exist_ok=True)
-dataloader = get_data_loader(path)
+dataloader = get_data_loader()
 # dataloader = torch.utils.data.DataLoader(
 #     datasets.MNIST(
 #         "../scratch/data/mnist",
@@ -146,7 +144,9 @@ def sample_image(n_row, batches_done):
 
 for epoch in range(opt.n_epochs):
     for i, (imgs, labels) in enumerate(dataloader):
-
+        imgs = imgs.to(device)
+        labels = labels.to(device)
+        
         batch_size = imgs.shape[0]
 
         # Adversarial ground truths
