@@ -11,7 +11,7 @@ from torchvision.utils import save_image
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torch.autograd import Variable
-
+import os
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
@@ -104,10 +104,10 @@ generator.to(device)
 discriminator.to(device)
 adversarial_loss.to(device)
 
-
+path = os.getcwd() + '/scratch/BlindCamera'
 # Configure data loader
-os.makedirs("../scratch/data/mnist", exist_ok=True)
-dataloader = get_data_loader()
+os.makedirs("..", exist_ok=True)
+dataloader = get_data_loader(path)
 # dataloader = torch.utils.data.DataLoader(
 #     datasets.MNIST(
 #         "../scratch/data/mnist",

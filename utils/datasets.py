@@ -55,7 +55,7 @@ class AudioDataset(Dataset):
         self.data.scene_label = pd.Categorical(self.data.scene_label)
         self.data['scene_label'] = self.data.scene_label.cat.codes
 
-def get_data_loader(path = '../../scratch/BlindCamera/data'):
+def get_data_loader(path):
     dataset = dcase_util.datasets.TAUUrbanAcousticScenes_2019_DevelopmentSet(data_path=path)
     dataset.initialize()
     data_path = path + 'TAU-urban-acoustic-scenes-2019-development/'
