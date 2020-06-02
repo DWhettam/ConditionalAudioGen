@@ -127,10 +127,11 @@ def split_data(audio_path_list, valid_ratio, test_ratio, batch_size):
     test_files = audio_path_list[num_valid:num_valid + num_test]
     train_files = audio_path_list[num_valid + num_test:]
     train_size = len(train_files)
-
+    
     train_data = batch_generator(train_files, batch_size)
     valid_data = batch_generator(valid_files, batch_size)
     test_data = batch_generator(test_files, batch_size)
+    print(train_data)
 
     return train_data, valid_data, test_data, train_size
 

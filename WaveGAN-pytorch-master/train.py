@@ -68,6 +68,8 @@ LOGGER.info('Loading audio data...')
 audio_paths = get_all_audio_filepaths(audio_dir)
 train_data, valid_data, test_data, train_size = split_data(audio_paths, args['valid_ratio'],
                                                            args['test_ratio'], batch_size)
+
+
 TOTAL_TRAIN_SAMPLES = train_size
 BATCH_NUM = TOTAL_TRAIN_SAMPLES // batch_size
 
@@ -99,7 +101,8 @@ for epoch in range(1, epochs+1):
         for p in netD.parameters():
             p.requires_grad = True
 
-        one = torch.Tensor([1]).float()
+        one = torch.tensor(1, dtype=torch.float)
+        #one = torch.Tensor([1]).float()
         neg_one = one * -1
         if cuda:
             one = one.cuda()
@@ -207,7 +210,7 @@ for epoch in range(1, epochs+1):
             G_cost = G_cost.cpu()
         G_cost_epoch.append(G_cost.data.numpy())
 
-        if i % (BATCH_NUM // 5) == 0:
+        if i % (BATCH_NUM / 5) == 0:
             LOGGER.info("{} Epoch={} Batch: {}/{} D_c:{:.4f} | D_w:{:.4f} | G:{:.4f}".format(time_since(start), epoch,
                                                                                              i, BATCH_NUM,
                                                                                              D_cost_train.data.numpy(),
