@@ -65,7 +65,7 @@ with open(config_path, 'w') as f:
 
 # Load data.
 LOGGER.info('Loading audio data...')
-audio_paths = get_all_audio_filepaths(audio_dir)
+audio_paths = get_all_audio_filepaths(audio_dir, args['csv'])
 train_data, valid_data, test_data, train_size = split_data(audio_paths, args['valid_ratio'],
                                                            args['test_ratio'], batch_size)
 

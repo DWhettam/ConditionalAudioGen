@@ -8,6 +8,7 @@ import librosa
 import argparse
 import pescador
 import numpy as np
+import pandas as pd
 from config import *
 from torch import autograd
 from torch.autograd import Variable
@@ -92,11 +93,17 @@ def sample_generator(filepath, window_length=16384, fs=16000):
         yield {'X': sample}
 
 
-def get_all_audio_filepaths(audio_dir):
-    return [os.path.join(root, fname)
-            for (root, dir_names, file_names) in os.walk(audio_dir, followlinks=True)
-            for fname in file_names
-            if (fname.lower().endswith('.wav') or fname.lower().endswith('.mp3'))]
+def get_all_audio_filepaths(audio_dir, csv = False):
+    if csv:
+        path = str(audio_dir.rpartition('/')[0])
+        df = pd.read_csv(audio_dir, sep='\t')
+        df['filename'] = path + df['filename'].astype(str)
+        return list(df['filename'])
+    else:
+        return [os.path.join(root, fname)
+                for (root, dir_names, file_names) in os.walk(audio_dir, followlinks=True)
+                for fname in file_names
+                if (fname.lower().endswith('.wav') or fname.lower().endswith('.mp3'))]
 
 
 def batch_generator(audio_path_list, batch_size):
@@ -131,7 +138,6 @@ def split_data(audio_path_list, valid_ratio, test_ratio, batch_size):
     train_data = batch_generator(train_files, batch_size)
     valid_data = batch_generator(valid_files, batch_size)
     test_data = batch_generator(test_files, batch_size)
-    print(train_data)
 
     return train_data, valid_data, test_data, train_size
 
@@ -214,6 +220,8 @@ def parse_arguments():
 
     parser.add_argument('-ms', '--model-size', dest='model_size', type=int, default=64,
                         help='Model size parameter used in WaveGAN')
+    parser.add_argument('-csv', '--csv', dest='csv', type=bool, default=False,
+                        help='Indicates if data is a filepath or csv of filepaths')
     parser.add_argument('-pssf', '--phase-shuffle-shift-factor', dest='shift_factor', type=int, default=2,
                         help='Maximum shift used by phase shuffle')
     parser.add_argument('-psb', '--phase-shuffle-batchwise', dest='batch_shuffle', action='store_true',
