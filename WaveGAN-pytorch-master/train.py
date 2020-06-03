@@ -141,7 +141,7 @@ for epoch in range(1, epochs+1):
             # Compute cost * Wassertein loss..
             D_cost_train = D_fake - D_real + gradient_penalty
             D_wass_train = D_real - D_fake
-
+             
             # Update gradient of discriminator.
             optimizerD.step()
 
