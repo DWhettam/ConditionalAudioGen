@@ -220,7 +220,7 @@ def parse_arguments():
 
     parser.add_argument('-ms', '--model-size', dest='model_size', type=int, default=64,
                         help='Model size parameter used in WaveGAN')
-    parser.add_argument('-csv', '--csv', dest='csv', type=bool, default=False,
+    parser.add_argument('-csv', '--csv', dest='csv', default=False, action='store_true',
                         help='Indicates if data is a filepath or csv of filepaths')
     parser.add_argument('-pssf', '--phase-shuffle-shift-factor', dest='shift_factor', type=int, default=2,
                         help='Maximum shift used by phase shuffle')
