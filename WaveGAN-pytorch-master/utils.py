@@ -97,7 +97,7 @@ def get_all_audio_filepaths(audio_dir, csv = False):
     if csv:
         path = str(audio_dir.rpartition('/')[0])
         df = pd.read_csv(audio_dir, sep='\t')
-        df['filename'] = path + df['filename'].astype(str)
+        df['filename'] = path +'/' +  df['filename'].astype(str)
         return list(df['filename'])
     else:
         return [os.path.join(root, fname)
