@@ -115,13 +115,16 @@ for epoch in range(1, epochs+1):
 
             # Noise
             noise = torch.Tensor(batch_size, latent_dim).uniform_(-1, 1)
+            gen_labels = torch.Tensor(np.random.randint(0, args.n_classes, batch_size))
             if cuda:
                 noise = noise.cuda()
+                gen_labels = gen_labels.cuda()
             noise_Var = Variable(noise, requires_grad=False)
+            gen_labels = Variable(gen_labels, requires_grad = False)
 
             real_data_and_label = next(train_iter)
-            real_data = data[0]
-            real_label = data[1]
+            real_data = real_data_and_label[0]
+            real_label = real_data_and_label[1]
             real_data_Var = numpy_to_var(real_data['X'], cuda)
             real_label_Var = numpy_to_var(real_label['X'], cuda)
 
@@ -131,8 +134,8 @@ for epoch in range(1, epochs+1):
             D_real.backward(neg_one)  # loss * -1
 
             # b) compute loss contribution from generated data, then backprop.
-            fake = autograd.Variable(netG(noise_Var).data)
-            D_fake = netD(fake)
+            fake = autograd.Variable(netG(noise_Var, gen_labels).data)
+            D_fake = netD(fake, gen_labels)
             D_fake = D_fake.mean()
             D_fake.backward(one)
 
@@ -154,13 +157,19 @@ for epoch in range(1, epochs+1):
             #############################
             netD.zero_grad()
 
-            valid_data_Var = numpy_to_var(next(valid_iter)['X'], cuda)
-            D_real_valid = netD(valid_data_Var)
+            valid_data_and_label = next(valid_iter)
+            valid_data = valid_data_and_label[0]
+            valid_label = valid_data_and_label[1]
+
+            valid_data_Var = numpy_to_var(valid_data['X'], cuda)
+            valid_label_Var = numpy_to_var(valid_label['X'], cuda)
+
+            D_real_valid = netD(valid_data_Var, valid_label_Var)
             D_real_valid = D_real_valid.mean()  # avg loss
 
             # b) compute loss contribution from generated data, then backprop.
-            fake_valid = netG(noise_Var)
-            D_fake_valid = netD(fake_valid)
+            fake_valid = netG(noise_Var, gen_labels)
+            D_fake_valid = netD(fake_valid, gen_labels)
             D_fake_valid = D_fake_valid.mean()
 
             # c) compute gradient penalty and backprop
@@ -195,12 +204,15 @@ for epoch in range(1, epochs+1):
 
         # Noise
         noise = torch.Tensor(batch_size, latent_dim).uniform_(-1, 1)
+        gen_labels = torch.Tensor(np.random.randint(0, args.n_classes, batch_size))
         if cuda:
             noise = noise.cuda()
+            gen_labels = gen_labels.cuda()
         noise_Var = Variable(noise, requires_grad=False)
+        gen_labels = Variable(gen_labels, requires_grad=False)
 
-        fake = netG(noise_Var)
-        G = netD(fake)
+        fake = netG(noise_Var, gen_labels)
+        G = netD(fake, gen_labels)
         G = G.mean()
 
         # Update gradients.
