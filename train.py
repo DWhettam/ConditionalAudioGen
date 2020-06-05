@@ -119,10 +119,14 @@ for epoch in range(1, epochs+1):
                 noise = noise.cuda()
             noise_Var = Variable(noise, requires_grad=False)
 
-            real_data_Var = numpy_to_var(next(train_iter)['X'], cuda)
+            real_data_and_label = next(train_iter)
+            real_data = data[0]
+            real_label = data[1]
+            real_data_Var = numpy_to_var(real_data['X'], cuda)
+            real_label_Var = numpy_to_var(real_label['X'], cuda)
 
             # a) compute loss contribution from real training data
-            D_real = netD(real_data_Var)
+            D_real = netD(real_data_Var, real_label_Var)
             D_real = D_real.mean()  # avg loss
             D_real.backward(neg_one)  # loss * -1
 

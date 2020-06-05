@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.data
+from train import *
 
 
 class Transpose1dLayer(nn.Module):
@@ -33,6 +34,7 @@ class WaveGANGenerator(nn.Module):
         self.latent_di = latent_dim
         self.post_proc_filt_len = post_proc_filt_len
         self.verbose = verbose
+        self.label_emb = nn.Embedding(args['num_classes'], args['num_classes'])
         # "Dense" is the same meaning as fully connection.
         self.fc1 = nn.Linear(latent_dim, 256 * model_size)
 
@@ -53,7 +55,9 @@ class WaveGANGenerator(nn.Module):
             if isinstance(m, nn.ConvTranspose1d) or isinstance(m, nn.Linear):
                 nn.init.kaiming_normal(m.weight.data)
 
-    def forward(self, x):
+    def forward(self, x, labels):
+        x = torch.cat((self.label_emb(labels), x), -1)
+
         x = self.fc1(x).view(-1, 16 * self.model_size, 16)
         x = F.relu(x)
         if self.verbose:
@@ -139,6 +143,7 @@ class WaveGANDiscriminator(nn.Module):
         self.shift_factor = shift_factor  # n
         self.alpha = alpha
         self.verbose = verbose
+        self.label_emb = nn.Embedding(args['num_classes'], args['num_classes'])
 
         self.conv1 = nn.Conv1d(num_channels, model_size, 25, stride=4, padding=11)
         self.conv2 = nn.Conv1d(model_size, 2 * model_size, 25, stride=4, padding=11)
@@ -157,7 +162,10 @@ class WaveGANDiscriminator(nn.Module):
             if isinstance(m, nn.Conv1d) or isinstance(m, nn.Linear):
                 nn.init.kaiming_normal(m.weight.data)
 
-    def forward(self, x):
+    def forward(self, x, labels):
+
+        x = torch.cat((self.label_emb(labels), x), -1)
+
         x = F.leaky_relu(self.conv1(x), negative_slope=self.alpha)
         if self.verbose:
             print(x.shape)

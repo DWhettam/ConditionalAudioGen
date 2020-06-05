@@ -238,6 +238,8 @@ def parse_arguments():
                         help='Ratio of audio files used for testing')
     parser.add_argument('-bs', '--batch-size', dest='batch_size', type=int, default=BATCH_SIZE,
                         help='Batch size used for training')
+    parser.add_argument('-nc', '--num-classes', dest='num_classes', type=int, default=10,
+                        help='Batch size used for training')
     parser.add_argument('-ne', '--num-epochs', dest='num_epochs', type=int, default=EPOCHS, help='Number of epochs')
     parser.add_argument('-ng', '--ngpus', dest='ngpus', type=int, default=4,
                         help='Number of GPUs to use for training')
