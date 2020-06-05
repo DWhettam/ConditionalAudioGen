@@ -100,8 +100,7 @@ def get_all_audio_filepaths(audio_dir, csv = False):
         df['filename'] = path +'/' +  df['filename'].astype(str)
 
         df.scene_label = pd.Categorical(pd.factorize(df.scene_label)[0])
-
-        return list(df[['filename', 'scene_label']])
+        return df[['filename', 'scene_label']].values.tolist()
     else:
         return [os.path.join(root, fname)
                 for (root, dir_names, file_names) in os.walk(audio_dir, followlinks=True)

@@ -69,7 +69,6 @@ audio_paths = get_all_audio_filepaths(audio_dir, args['csv'])
 train_data, valid_data, test_data, train_size = split_data(audio_paths, args['valid_ratio'],
                                                            args['test_ratio'], batch_size)
 
-
 TOTAL_TRAIN_SAMPLES = train_size
 BATCH_NUM = TOTAL_TRAIN_SAMPLES // batch_size
 
@@ -77,6 +76,7 @@ train_iter = iter(train_data)
 valid_iter = iter(valid_data)
 test_iter = iter(test_data)
 
+print(np.shape(next(train_iter)))
 
 # =============Train===============
 history = []
