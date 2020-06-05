@@ -98,7 +98,10 @@ def get_all_audio_filepaths(audio_dir, csv = False):
         path = str(audio_dir.rpartition('/')[0])
         df = pd.read_csv(audio_dir, sep='\t')
         df['filename'] = path +'/' +  df['filename'].astype(str)
-        return list(df['filename'])
+
+        df.scene_label = pd.Categorical(pd.factorize(df.scene_label)[0])
+
+        return list(df[['filename', 'scene_label']])
     else:
         return [os.path.join(root, fname)
                 for (root, dir_names, file_names) in os.walk(audio_dir, followlinks=True)
@@ -109,7 +112,7 @@ def get_all_audio_filepaths(audio_dir, csv = False):
 def batch_generator(audio_path_list, batch_size):
     streamers = []
     for audio_path in audio_path_list:
-        s = pescador.Streamer(sample_generator, audio_path)
+        s = pescador.Streamer(sample_generator, audio_path[0], audio_path[1])
         streamers.append(s)
 
     mux = pescador.ShuffledMux(streamers)
