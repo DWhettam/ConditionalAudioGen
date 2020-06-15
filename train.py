@@ -115,7 +115,7 @@ for epoch in range(1, epochs+1):
 
             # Noise
             noise = torch.Tensor(batch_size, latent_dim).uniform_(-1, 1)
-            gen_labels = torch.Tensor(np.random.randint(0, args.n_classes, batch_size))
+            gen_labels = torch.Tensor(np.random.randint(0, args['num_classes'], batch_size))
             if cuda:
                 noise = noise.cuda()
                 gen_labels = gen_labels.cuda()
@@ -204,7 +204,7 @@ for epoch in range(1, epochs+1):
 
         # Noise
         noise = torch.Tensor(batch_size, latent_dim).uniform_(-1, 1)
-        gen_labels = torch.Tensor(np.random.randint(0, args.n_classes, batch_size))
+        gen_labels = torch.Tensor(np.random.randint(0, args['num_classes'], batch_size))
         if cuda:
             noise = noise.cuda()
             gen_labels = gen_labels.cuda()
